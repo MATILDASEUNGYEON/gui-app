@@ -29,12 +29,12 @@ npm install
 #   --with-deps 는 apt 의존성까지 설치하므로 sudo 권한이 필요할 수 있습니다.
 npx playwright install --with-deps chromium
 
-# 서버 실행 (기본 포트 5188)
+# 서버 실행 (기본 포트 5160)
 npm run dev
 #   PORT=8080 npm run dev   # 포트 변경
 ```
 
-브라우저에서 `http://<서버-IP>:5188` 접속.
+브라우저에서 `http://<서버-IP>:5160` 접속.
 
 > 외부에서 접속하려면 서버 방화벽/보안그룹에서 해당 포트를 열어야 합니다.
 

@@ -217,7 +217,7 @@ const vite = await createViteServer({
 
 app.use(vite.middlewares);
 
-const port = Number(process.env.PORT) || 5188;
+const port = Number(process.env.PORT) || 5160;
 app.listen(port, () => {
   console.log(`Wireframe GUI Studio running at http://localhost:${port}`);
 });

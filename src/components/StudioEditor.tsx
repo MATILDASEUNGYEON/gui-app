@@ -47,6 +47,15 @@ export default function StudioEditor({ projectId, onStatus, onReady }: Props) {
 
         onEditor: (ed: AnyEditor) => {
           editor = ed;
+          // GrapesJS는 기본적으로 <button>을 편집 가능한 텍스트로 보지 않아
+          // 더블클릭 인라인 편집이 안 된다. text 타입을 확장해 버튼 텍스트도
+          // 다른 텍스트 필드처럼 더블클릭으로 수정할 수 있게 한다.
+          // (프로젝트 파싱 전에 등록되도록 onEditor에서 수행)
+          ed.DomComponents.addType('button', {
+            extend: 'text',
+            isComponent: (el: HTMLElement) => el.tagName === 'BUTTON',
+            model: { defaults: { tagName: 'button' } }
+          });
           cbRef.current.onReady?.({ editor: ed, kind });
         },
 
