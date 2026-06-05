@@ -50,10 +50,13 @@ app.post('/api/projects/import', async (req: Request, res: Response) => {
         try {
           result = await flattenWireframe(html);
         } catch (renderErr) {
+          // Playwright는 멀티라인 브라우저 로그를 던지므로 첫 줄만 노출한다.
+          const brief = (renderErr as Error).message.split('\n')[0];
           throw new Error(
             '동적 와이어프레임 평탄화에 실패했습니다(헤드리스 브라우저 실행 오류). ' +
-              '서버에서 `npx playwright install-deps chromium`로 시스템 의존성을 설치하세요. ' +
-              `(상세: ${(renderErr as Error).message})`
+              '서버에 Chromium과 시스템 의존성을 설치하세요: ' +
+              '`npx playwright install --with-deps chromium`. ' +
+              `(상세: ${brief})`
           );
         }
         if (!result) {
@@ -202,7 +205,13 @@ app.post('/api/export-html', async (req: Request, res: Response) => {
 
 const vite = await createViteServer({
   root: ROOT_DIR,
-  server: { middlewareMode: true },
+  server: {
+    middlewareMode: true,
+    // workspace/ 의 .html은 API로 저장되는 '데이터'이므로 감시 대상에서 제외한다.
+    // 제외하지 않으면 가져오기/자동저장마다 Vite가 전체 페이지를 리로드해
+    // React 상태(편집 화면)가 초기화된다.
+    watch: { ignored: ['**/workspace/**'] }
+  },
   appType: 'spa'
 });
 
