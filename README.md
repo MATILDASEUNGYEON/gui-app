@@ -44,13 +44,20 @@ npm run dev
 - `workspace/`와 `node_modules/`는 git에 올라가지 않습니다(`.gitignore`).
 - 서버를 옮길 때 편집 중인 프로젝트를 보존하려면 `workspace/`를 함께 복사하세요.
 
-## 라이선스 키 (배포 전 권장)
+## 라이선스 키 (외부 도메인/IP 배포 시 필수)
 
-GrapesJS Studio SDK는 운영 환경에서 라이선스 키가 필요합니다. 빌드 시 환경변수로 주입하세요.
+GrapesJS Studio SDK 라이선스 정책:
+
+- **localhost 접속**: 아무 키나 유효합니다. 키를 지정하지 않으면 `DEV_LICENSE_KEY`로 자동 폴백되어 그대로 동작합니다.
+- **외부 도메인/IP 접속**(예: `http://서버IP:8080`): `DEV_LICENSE_KEY`는 동작하지 않고 **License Error**가 납니다. 실제 키가 필요합니다.
+
+실제 키는 [app.grapesjs.com](https://app.grapesjs.com) 에서 무료로 발급받아 환경변수로 주입하세요.
 
 ```bash
-VITE_GRAPESJS_LICENSE_KEY=your-key npm run dev
+VITE_GRAPESJS_LICENSE_KEY=발급받은-키 npm run dev
 ```
+
+> 빈 문자열(`''`)을 키로 넘기면 '잘못된 키'로 처리되어 localhost에서도 License Error가 납니다. 그래서 폴백을 빈 문자열이 아닌 `DEV_LICENSE_KEY`로 두었습니다.
 
 ## 동작 개요
 
@@ -64,4 +71,5 @@ VITE_GRAPESJS_LICENSE_KEY=your-key npm run dev
 ## 트러블슈팅
 
 - **'편집 시작'을 눌러도 화면이 안 넘어감 / 가져오기 오류**: 동적 와이어프레임인데 서버에 Chromium이 없을 때 발생합니다. `npx playwright install --with-deps chromium`를 실행하세요. (가져오기 화면에 빨간 오류 메시지로 원인이 표시됩니다.)
+- **License Error**: 외부 도메인/IP로 접속했는데 실제 라이선스 키가 없을 때 납니다. 위 「라이선스 키」 섹션 참고. (localhost 접속이면 발생하지 않음)
 - **포트 충돌**: `PORT=다른포트 npm run dev`.

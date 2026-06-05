@@ -39,8 +39,10 @@ export default function StudioEditor({ projectId, onStatus, onReady }: Props) {
 
       await createStudioEditor({
         root: rootRef.current,
-        // 개발 단계는 빈 키로 동작(워터마크). 배포 전 VITE_GRAPESJS_LICENSE_KEY 주입.
-        licenseKey: import.meta.env.VITE_GRAPESJS_LICENSE_KEY ?? '',
+        // localhost에서는 비어있지 않은 아무 키나 유효(SDK 사양). 빈 문자열은
+        // '잘못된 키'로 처리돼 License Error가 나므로 DEV_LICENSE_KEY로 폴백한다.
+        // 외부 도메인/IP로 배포할 때는 VITE_GRAPESJS_LICENSE_KEY에 실제 키를 넣어야 한다.
+        licenseKey: import.meta.env.VITE_GRAPESJS_LICENSE_KEY || 'DEV_LICENSE_KEY',
         project: { type: 'web' },
 
         onEditor: (ed: AnyEditor) => {
